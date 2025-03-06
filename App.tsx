@@ -1,12 +1,12 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './src/HomeScreen';
 import SettingsScreen from './src/SettingsScreen';
 import RecipeDetailScreen from './src/RecipeDetailScreen';
-import {Home, Settings} from 'lucide-react-native';
-import {View, Text, StyleSheet, Animated} from 'react-native';
+import { Home, Settings } from 'lucide-react-native';
+import { View, StyleSheet } from 'react-native';
 import TermOfService from './src/TermOfService';
 import PrivacyPolicy from './src/PrivacyPolicy';
 import HowToUse from './src/HowToUse';
@@ -20,18 +20,22 @@ const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: '#81C784',
         tabBarInactiveTintColor: '#B0B0B0',
         tabBarStyle: {
-          backgroundColor: '#1E1E1E',
-          borderTopWidth: 0,
-          height: 80,
-          paddingBottom: 10,
-          paddingTop: 10,
-          elevation: 10,
-          shadowColor: '#000',
+          position: "absolute",
+          bottom: 20,
+          marginHorizontal: 15,
+          backgroundColor: "#2A2A2A",
+          borderRadius: 15,
+          height: 60,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          elevation: 5,
         },
         headerStyle: {
           backgroundColor: '#1E1E1E',
@@ -40,7 +44,7 @@ const BottomTabNavigator = () => {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-        tabBarIcon: ({color, size, focused}) => {
+        tabBarIcon: ({ color, size }) => {
           let IconComponent;
           if (route.name === 'Home') {
             IconComponent = Home;
@@ -49,21 +53,21 @@ const BottomTabNavigator = () => {
           }
           return (
             <View style={styles.iconContainer}>
-              <IconComponent color={color} size={focused ? 34 : 28} />
-              {focused && <Text style={styles.iconLabel}>{route.name}</Text>}
+              <IconComponent color={color} size={30} />  {/* Sabit boyut */}
             </View>
           );
         },
+        
       })}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{title: 'Cook Assistant'}}
+        options={{ title: 'Cook Assistant' }}
       />
       <Tab.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{title: 'Settings'}}
+        options={{ title: 'Settings' }}
       />
     </Tab.Navigator>
   );
@@ -78,7 +82,6 @@ const App = () => {
           headerStyle: {
             backgroundColor: '#1E1E1E',
           },
-        
           headerTintColor: '#FFFFFF',
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -87,30 +90,30 @@ const App = () => {
         <Stack.Screen
           name="BottomTabs"
           component={BottomTabNavigator}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="RecipeDetail"
           component={RecipeDetailScreen}
-          options={{title:'Recipe Details'}}
+          options={{ title: 'Recipe Details' }}
         />
         <Stack.Screen
           name="TermOfService"
           component={TermOfService}
-          options={{title: 'Terms of Service'}}
+          options={{ title: 'Terms of Service' }}
         />
         <Stack.Screen
           name="PrivacyPolicy"
           component={PrivacyPolicy}
-          options={{title: 'Privacy Policy'}}
+          options={{ title: 'Privacy Policy' }}
         />
         <Stack.Screen
           name="HowToUse"
           component={HowToUse}
-          options={{title: 'How to Use'}}
+          options={{ title: 'How to Use' }}
         />
-        <Stack.Screen name='Home' component={HomeScreen} options={{headerShown: false}} />
-    <Stack.Screen name='Settings' component={SettingsScreen} options={{headerShown: false}} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
