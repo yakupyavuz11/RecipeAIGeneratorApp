@@ -1,8 +1,20 @@
-import React, { useState } from 'react';
-import { SafeAreaView, Text, TextInput, FlatList, View, StyleSheet, ActivityIndicator, TouchableOpacity, Image, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Search, ChefHat } from 'lucide-react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import React, {useState} from 'react';
+import {
+  SafeAreaView,
+  Text,
+  TextInput,
+  FlatList,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Image,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {Search, ChefHat} from 'lucide-react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const API_KEY = '7b2f8ee613474c0fba65b45ed5b08a97';
 
@@ -18,21 +30,24 @@ const HomeScreen = () => {
     setLoading(true);
     setError('');
 
-    const ingredientsList = ingredients.split(',').map(item => item.trim()).join(',');
+    const ingredientsList = ingredients
+      .split(',')
+      .map(item => item.trim())
+      .join(',');
 
     try {
       const response = await fetch(
-        `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${ingredientsList}&number=10`
+        `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${ingredientsList}&number=10`,
       );
       const data = await response.json();
 
       if (response.ok && data.length > 0) {
         setRecipes(data);
       } else {
-        setError('No recipes found. Try different ingredients.');
+        setError('Tarif bulunamadı. Farklı malzemeler deneyin.');
       }
     } catch (err) {
-      setError('Unable to fetch recipes. Please try again.');
+      setError('Tarifleri getiremedik. Lütfen tekrar deneyin.');
     } finally {
       setLoading(false);
     }
@@ -42,9 +57,8 @@ const HomeScreen = () => {
     <KeyboardAwareScrollView
       style={styles.container}
       enableOnAndroid={true}
-      extraScrollHeight={80} // Klavyenin giriş alanını kapatmaması için ekstra kaydırma
-      enableAutomaticScroll={true} // iOS için otomatik kaydırmayı etkinleştirir
-    >
+      extraScrollHeight={80}
+      enableAutomaticScroll={true}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.inner}>
           <View style={styles.header}>
@@ -53,10 +67,12 @@ const HomeScreen = () => {
           </View>
 
           <View style={styles.searchContainer}>
-            <Search size={20} color="#9CA3AF" style={styles.searchIcon} />
+            <TouchableOpacity onPress={fetchRecipesFromSpoonacular}>
+              <Search size={20} color="#9CA3AF" style={styles.searchIcon} />
+            </TouchableOpacity>
             <TextInput
               style={styles.input}
-              placeholder="Enter ingredients (e.g., chicken, tomato, basil)"
+              placeholder="Enter ingredients (e.g., chicken, tomatoes)"
               value={ingredients}
               onChangeText={setIngredients}
               placeholderTextColor="#9CA3AF"
@@ -74,23 +90,26 @@ const HomeScreen = () => {
           {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#4CAF50" />
-              <Text style={styles.loadingText}>Finding recipes...</Text>
+              <Text style={styles.loadingText}>Tarifler aranıyor...</Text>
             </View>
           ) : (
             <FlatList
               data={recipes}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={item => item.id.toString()}
               contentContainerStyle={styles.recipeList}
               showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => (
+              renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.card}
-                  onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
-                >
-                  <Image source={{ uri: item.image }} style={styles.cardImage} />
+                  onPress={() =>
+                    navigation.navigate('RecipeDetail', {recipe: item})
+                  }>
+                  <Image source={{uri: item.image}} style={styles.cardImage} />
                   <View style={styles.cardOverlay} />
                   <View style={styles.cardContent}>
-                    <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
+                    <Text style={styles.cardTitle} numberOfLines={2}>
+                      {item.title}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               )}
@@ -140,7 +159,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 14, // Normal metin boyutu
   },
   recipeList: {
     padding: 24,
@@ -152,7 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1F2937',
     elevation: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 8,
   },
